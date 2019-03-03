@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -55,7 +54,13 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
         setUpCoinsLiveData();
 
         if (savedInstanceState == null) {
-            presenter.onLoadMore();
+            Log.i("TAG_L", "last item = " + String.valueOf( ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition()));
+            Log.i("TAG_L", "item count = " + String.valueOf(recyclerView.getLayoutManager().getItemCount()));
+
+            presenter.onLoadMore(
+                    ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition(),
+                    recyclerView.getLayoutManager().getItemCount()
+            );
         }
         return view;
     }
@@ -67,9 +72,10 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition() == recyclerView.getLayoutManager().getItemCount() - 1) {
-                    presenter.onLoadMore();
-                }
+                presenter.onLoadMore(
+                        ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition(),
+                        recyclerView.getLayoutManager().getItemCount()
+                );
             }
         });
     }
@@ -87,23 +93,23 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     public void showProgressBar() {
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        Log.i("TAG_L", "show p");
+        Log.i("TAG_L", "show progress bar");
     }
 
     @Override
     public void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-        Log.i("TAG_L", "hide p");
+        Log.i("TAG_L", "hide progress bar");
     }
 
     @Override
     public void showFooter() {
-        Log.i("TAG_L", "show f");
+        Log.i("TAG_L", "show footer");
     }
 
     @Override
     public void hideFooter() {
-        Log.i("TAG_L", "hide f");
+        Log.i("TAG_L", "hide footer");
     }
 }

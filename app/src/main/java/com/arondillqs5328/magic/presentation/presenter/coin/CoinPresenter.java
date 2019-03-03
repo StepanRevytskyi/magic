@@ -55,22 +55,24 @@ public class CoinPresenter extends MvpPresenter<CoinView> implements CoinCallbac
         Log.i("TAG_L", "size = " + getCoinLiveData().getValue().size());
     }
 
-    public void onLoadMore() {
-        if (getCoinLiveData().getValue().size() == 0) {
-            if (!isLoading) {
-                getViewState().showProgressBar();
+    public void onLoadMore(int visiblePosition, int itemCount) {
+        if (visiblePosition == itemCount - 1) {
+            if (getCoinLiveData().getValue().size() == 0) {
+                if (!isLoading) {
+                    getViewState().showProgressBar();
 
-                repository.loadMore(start, limit);
-                start = start + limit;
-                isLoading = true;
-            }
-        } else {
-            if (!isLoading) {
-                getViewState().showFooter();
+                    repository.loadMore(start, limit);
+                    start = start + limit;
+                    isLoading = true;
+                }
+            } else {
+                if (!isLoading) {
+                    getViewState().showFooter();
 
-                repository.loadMore(start, limit);
-                start = start + limit;
-                isLoading = true;
+                    repository.loadMore(start, limit);
+                    start = start + limit;
+                    isLoading = true;
+                }
             }
         }
     }
