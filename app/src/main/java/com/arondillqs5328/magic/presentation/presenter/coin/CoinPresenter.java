@@ -2,7 +2,6 @@ package com.arondillqs5328.magic.presentation.presenter.coin;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -51,8 +50,6 @@ public class CoinPresenter extends MvpPresenter<CoinView> implements CoinCallbac
         isLoading = false;
         getViewState().hideProgressBar();
         getViewState().hideFooter();
-
-        Log.i("TAG_L", "size = " + getCoinLiveData().getValue().size());
     }
 
     public void onLoadMore(int visiblePosition, int itemCount) {

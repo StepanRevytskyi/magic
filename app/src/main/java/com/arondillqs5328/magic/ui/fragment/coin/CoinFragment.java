@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +53,6 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
         setUpCoinsLiveData();
 
         if (savedInstanceState == null) {
-            Log.i("TAG_L", "last item = " + String.valueOf( ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition()));
-            Log.i("TAG_L", "item count = " + String.valueOf(recyclerView.getLayoutManager().getItemCount()));
-
             presenter.onLoadMore(
                     ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition(),
                     recyclerView.getLayoutManager().getItemCount()
@@ -93,23 +89,19 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     public void showProgressBar() {
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        Log.i("TAG_L", "show progress bar");
     }
 
     @Override
     public void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-        Log.i("TAG_L", "hide progress bar");
     }
 
     @Override
     public void showFooter() {
-        Log.i("TAG_L", "show footer");
     }
 
     @Override
     public void hideFooter() {
-        Log.i("TAG_L", "hide footer");
     }
 }
