@@ -20,7 +20,7 @@ public class CoinPresenter extends MvpPresenter<CoinView> implements CoinCallbac
 
     private boolean isLoading = false;
     private Integer start = 1;
-    private Integer limit = 25;
+    private Integer limit = 20;
     private MutableLiveData<List<Coin>> coinLiveData = new MutableLiveData<>();
     private CoinRepository repository;
 

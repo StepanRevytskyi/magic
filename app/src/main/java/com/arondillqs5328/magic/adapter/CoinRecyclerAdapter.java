@@ -1,11 +1,13 @@
 package com.arondillqs5328.magic.adapter;
 
-import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,11 +22,12 @@ import butterknife.ButterKnife;
 
 public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinViewHolder> {
 
-    private LiveData<List<Coin>> coinLiveData;
+    private List<Coin> coins;
+    private final SparseBooleanArray selectedCoins = new SparseBooleanArray();
     private final String IMAGE_URL = "https://s2.coinmarketcap.com/static/img/coins/128x128/";
 
-    public CoinRecyclerAdapter(LiveData<List<Coin>> coinLiveData) {
-        this.coinLiveData = coinLiveData;
+    public CoinRecyclerAdapter(List<Coin> coins) {
+        this.coins = coins;
     }
 
     @NonNull
@@ -36,9 +39,19 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CoinViewHolder coinViewHolder, int i) {
-        String url = IMAGE_URL + coinLiveData.getValue().get(i).getId() + ".png";
-        coinViewHolder.labelTextView.setText(coinLiveData.getValue().get(i).getName());
+    public void onBindViewHolder(@NonNull final CoinViewHolder coinViewHolder, int i) {
+        String url = IMAGE_URL + coins.get(i).getId() + ".png";
+        coinViewHolder.labelTextView.setText(coins.get(i).getName());
+
+        coinViewHolder.checkBox.setChecked(selectedCoins.get(i, false));
+        coinViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    selectedCoins.put(coinViewHolder.getAdapterPosition(), isChecked);
+                }
+            }
+        });
 
         Picasso.get()
                 .load(url)
@@ -46,9 +59,13 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
                 .into(coinViewHolder.logoImageView);
     }
 
+    public void setCoins(List<Coin> coins) {
+        this.coins = coins;
+    }
+
     @Override
     public int getItemCount() {
-        return coinLiveData.getValue().size();
+        return coins.size();
     }
 
 
@@ -56,6 +73,7 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         @BindView(R.id.coin_logo) ImageView logoImageView;
         @BindView(R.id.coin_label) TextView labelTextView;
+        @BindView(R.id.checkbox) CheckBox checkBox;
 
         public CoinViewHolder(@NonNull View itemView) {
             super(itemView);

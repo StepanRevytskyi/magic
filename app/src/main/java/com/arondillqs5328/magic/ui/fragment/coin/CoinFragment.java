@@ -64,7 +64,7 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new CoinRecyclerAdapter(coins));
+        recyclerView.setAdapter(new CoinRecyclerAdapter(coins.getValue()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -80,6 +80,7 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
         coins.observe(this, new Observer<List<Coin>>() {
             @Override
             public void onChanged(@Nullable List<Coin> coins) {
+                ((CoinRecyclerAdapter) recyclerView.getAdapter()).setCoins(coins);
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
