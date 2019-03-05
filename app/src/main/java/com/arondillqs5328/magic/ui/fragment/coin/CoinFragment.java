@@ -16,6 +16,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arondillqs5328.magic.R;
 import com.arondillqs5328.magic.adapter.CoinRecyclerAdapter;
+import com.arondillqs5328.magic.database.MagicDBHelper;
 import com.arondillqs5328.magic.pojo.Coin;
 import com.arondillqs5328.magic.presentation.presenter.coin.CoinPresenter;
 import com.arondillqs5328.magic.presentation.view.coin.CoinView;
@@ -64,7 +65,7 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new CoinRecyclerAdapter(coins.getValue()));
+        recyclerView.setAdapter(new CoinRecyclerAdapter(coins.getValue(), new MagicDBHelper()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

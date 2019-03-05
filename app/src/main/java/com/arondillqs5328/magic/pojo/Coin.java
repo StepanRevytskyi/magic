@@ -1,38 +1,53 @@
 package com.arondillqs5328.magic.pojo;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "coins")
 public class Coin {
 
+    @PrimaryKey
+    @ColumnInfo(name = "id", index = true)
     @SerializedName("id")
     @Expose
     private int id;
 
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     @Expose
     private String name;
 
+    @Ignore
     @SerializedName("symbol")
     @Expose
     private String symbol;
 
+    @Ignore
     @SerializedName("slug")
     @Expose
     private String slug;
 
+    @Ignore
     @SerializedName("is_active")
     @Expose
     private int isActive;
 
+    @Ignore
     @SerializedName("first_historical_data")
     @Expose
     private String firstHistoricalData;
 
+    @Ignore
     @SerializedName("last_historical_data")
     @Expose
     private String lastHistoricalData;
 
+    @Ignore
     @SerializedName("platform")
     @Expose
     private Object platform;

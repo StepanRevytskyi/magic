@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arondillqs5328.magic.R;
+import com.arondillqs5328.magic.database.MagicDBHelper;
 import com.arondillqs5328.magic.pojo.Coin;
 import com.squareup.picasso.Picasso;
 
@@ -24,10 +25,12 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     private List<Coin> coins;
     private final SparseBooleanArray selectedCoins = new SparseBooleanArray();
+    private MagicDBHelper magicDBHelper;
     private final String IMAGE_URL = "https://s2.coinmarketcap.com/static/img/coins/128x128/";
 
-    public CoinRecyclerAdapter(List<Coin> coins) {
+    public CoinRecyclerAdapter(List<Coin> coins, MagicDBHelper magicDBHelper) {
         this.coins = coins;
+        this.magicDBHelper = magicDBHelper;
     }
 
     @NonNull
@@ -44,12 +47,16 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         coinViewHolder.labelTextView.setText(coins.get(i).getName());
 
         coinViewHolder.checkBox.setChecked(selectedCoins.get(i, false));
+
         coinViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    selectedCoins.put(coinViewHolder.getAdapterPosition(), isChecked);
-                }
+//                if (isChecked) {
+//                    magicDBHelper.insertCoinIntoDB(coins.get(coinViewHolder.getAdapterPosition()));
+//                } else {
+//                    magicDBHelper.deleteCoinFromDB(coins.get(coinViewHolder.getAdapterPosition()).getId());
+//                }
+                selectedCoins.put(coinViewHolder.getAdapterPosition(), isChecked);
             }
         });
 
