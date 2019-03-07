@@ -51,11 +51,11 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         coinViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    magicDBHelper.insertCoinIntoDB(coins.get(coinViewHolder.getAdapterPosition()));
-//                } else {
-//                    magicDBHelper.deleteCoinFromDB(coins.get(coinViewHolder.getAdapterPosition()).getId());
-//                }
+                if (isChecked) {
+                    magicDBHelper.insertCoinIntoDB(coins.get(coinViewHolder.getAdapterPosition()));
+                } else {
+                    magicDBHelper.deleteCoinFromDB(coins.get(coinViewHolder.getAdapterPosition()).getId());
+                }
                 selectedCoins.put(coinViewHolder.getAdapterPosition(), isChecked);
             }
         });

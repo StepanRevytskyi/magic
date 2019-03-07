@@ -1,13 +1,20 @@
 package com.arondillqs5328.magic.database;
 
+import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.arondillqs5328.magic.CoinApplication;
 import com.arondillqs5328.magic.pojo.Coin;
 
+import java.util.List;
+
 public class MagicDBHelper {
 
     public MagicDBHelper() {
+    }
+
+    public LiveData<List<Coin>> getCoin(int id) {
+        return CoinApplication.getInstance().getDatabase().coinDao().getCoin(id);
     }
 
     public void insertCoinIntoDB(Coin coin) {
