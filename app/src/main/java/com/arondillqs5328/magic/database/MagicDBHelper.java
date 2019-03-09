@@ -2,10 +2,12 @@ package com.arondillqs5328.magic.database;
 
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.arondillqs5328.magic.CoinApplication;
 import com.arondillqs5328.magic.pojo.Coin;
 
+import java.util.Date;
 import java.util.List;
 
 public class MagicDBHelper {
@@ -13,8 +15,8 @@ public class MagicDBHelper {
     public MagicDBHelper() {
     }
 
-    public LiveData<List<Coin>> getCoin(int id) {
-        return CoinApplication.getInstance().getDatabase().coinDao().getCoin(id);
+    public LiveData<List<Integer>> getCoin() {
+        return CoinApplication.getInstance().getDatabase().coinDao().getCoin();
     }
 
     public void insertCoinIntoDB(Coin coin) {
@@ -31,6 +33,7 @@ public class MagicDBHelper {
         @Override
         protected Void doInBackground(Coin... coins) {
             CoinApplication.getInstance().getDatabase().coinDao().insertCoin(coins[0]);
+            Log.i("TAG_S", String.valueOf(new Date().getTime()));
             return null;
         }
     }

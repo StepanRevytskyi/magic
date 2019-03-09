@@ -32,7 +32,9 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     @BindView(R.id.coin_recycler_view) RecyclerView recyclerView;
 
     @InjectPresenter CoinPresenter presenter;
-    private LiveData<List<Coin>> coins;
+    private LiveData<List<Coin>> coinLiveData;
+    private LiveData<List<Integer>> favoriteCoinLiveData;
+    private MagicDBHelper magicDBHelper = new MagicDBHelper();
 
     public static CoinFragment getInstance() {
         CoinFragment fragment = new CoinFragment();
@@ -48,10 +50,11 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
         View view = inflater.inflate(R.layout.fragment_coin, container, false);
         ButterKnife.bind(this, view);
 
-        coins = presenter.getCoinLiveData();
+        coinLiveData = presenter.getCoinLiveData();
+        favoriteCoinLiveData = magicDBHelper.getCoin();
 
         setUpRecyclerView();
-        setUpCoinsLiveData();
+        setUpLiveData();
 
         if (savedInstanceState == null) {
             presenter.onLoadMore(
@@ -65,7 +68,7 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new CoinRecyclerAdapter(coins.getValue(), new MagicDBHelper()));
+        recyclerView.setAdapter(new CoinRecyclerAdapter(coinLiveData.getValue(), new MagicDBHelper()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -77,12 +80,19 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
         });
     }
 
-    private void setUpCoinsLiveData() {
-        coins.observe(this, new Observer<List<Coin>>() {
+    private void setUpLiveData() {
+        coinLiveData.observe(this, new Observer<List<Coin>>() {
             @Override
             public void onChanged(@Nullable List<Coin> coins) {
                 ((CoinRecyclerAdapter) recyclerView.getAdapter()).setCoins(coins);
                 recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+
+        favoriteCoinLiveData.observe(this, new Observer<List<Integer>>() {
+            @Override
+            public void onChanged(@Nullable List<Integer> integers) {
+                ((CoinRecyclerAdapter) recyclerView.getAdapter()).setFavoriteCoins(integers);
             }
         });
     }

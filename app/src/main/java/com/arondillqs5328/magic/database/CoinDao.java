@@ -13,8 +13,8 @@ import java.util.List;
 @Dao
 public interface CoinDao {
 
-    @Query("SELECT * FROM coins WHERE id = :id")
-    LiveData<List<Coin>> getCoin(int id);
+    @Query("SELECT id FROM coins")
+    LiveData<List<Integer>> getCoin();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCoin(Coin coin);

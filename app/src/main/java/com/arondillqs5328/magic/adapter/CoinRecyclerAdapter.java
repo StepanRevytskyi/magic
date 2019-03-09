@@ -2,6 +2,7 @@ package com.arondillqs5328.magic.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.arondillqs5328.magic.database.MagicDBHelper;
 import com.arondillqs5328.magic.pojo.Coin;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,8 +26,11 @@ import butterknife.ButterKnife;
 public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinViewHolder> {
 
     private List<Coin> coins;
+    private List<Integer> favoriteCoins;
+
     private final SparseBooleanArray selectedCoins = new SparseBooleanArray();
     private MagicDBHelper magicDBHelper;
+
     private final String IMAGE_URL = "https://s2.coinmarketcap.com/static/img/coins/128x128/";
 
     public CoinRecyclerAdapter(List<Coin> coins, MagicDBHelper magicDBHelper) {
@@ -48,13 +53,23 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
         coinViewHolder.checkBox.setChecked(selectedCoins.get(i, false));
 
+        if (favoriteCoins.contains(coins.get(i).getId())) {
+            coinViewHolder.checkBox.setChecked(true);
+        }
+
         coinViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    magicDBHelper.insertCoinIntoDB(coins.get(coinViewHolder.getAdapterPosition()));
+                    if (!favoriteCoins.contains(coins.get(coinViewHolder.getAdapterPosition()).getId())) {
+                        Log.i("TAG_L", String.valueOf(new Date().getTime()));
+                        magicDBHelper.insertCoinIntoDB(coins.get(coinViewHolder.getAdapterPosition()));
+
+                    }
                 } else {
-                    magicDBHelper.deleteCoinFromDB(coins.get(coinViewHolder.getAdapterPosition()).getId());
+                    if (favoriteCoins.contains(coins.get(coinViewHolder.getAdapterPosition()).getId())) {
+                        magicDBHelper.deleteCoinFromDB(coins.get(coinViewHolder.getAdapterPosition()).getId());
+                    }
                 }
                 selectedCoins.put(coinViewHolder.getAdapterPosition(), isChecked);
             }
@@ -68,6 +83,10 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     public void setCoins(List<Coin> coins) {
         this.coins = coins;
+    }
+
+    public void setFavoriteCoins(List<Integer> favoriteCoins) {
+        this.favoriteCoins = favoriteCoins;
     }
 
     @Override
