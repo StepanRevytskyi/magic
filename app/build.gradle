@@ -44,11 +44,15 @@ dependencies {
     implementation 'androidx.room:room-rxjava2:2.1.0-alpha06'
     annotationProcessor 'androidx.room:room-compiler:2.1.0-alpha06'
 
-    //retrofit & okhttp
+    //retrofit
     implementation 'com.squareup.okhttp:okhttp:2.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //RxJava
+    implementation "io.reactivex.rxjava2:rxjava:2.2.7"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }

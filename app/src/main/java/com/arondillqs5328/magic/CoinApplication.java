@@ -1,14 +1,16 @@
 package com.arondillqs5328.magic;
 
 import android.app.Application;
-import androidx.room.Room;
 
 import com.arondillqs5328.magic.database.CoinDatabase;
+
+import androidx.room.Room;
 
 public class CoinApplication extends Application {
 
     private static CoinApplication instance;
     private CoinDatabase database;
+    private final Object block = new Object();
 
     @Override
     public void onCreate() {
@@ -23,6 +25,8 @@ public class CoinApplication extends Application {
     }
 
     public CoinDatabase getDatabase() {
-        return database;
+        synchronized (block) {
+            return database;
+        }
     }
 }

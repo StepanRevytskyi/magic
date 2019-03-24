@@ -1,8 +1,5 @@
 package com.arondillqs5328.magic.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,77 +11,73 @@ import android.widget.TextView;
 
 import com.arondillqs5328.magic.R;
 import com.arondillqs5328.magic.database.MagicDBHelper;
-import com.arondillqs5328.magic.pojo.Coin;
+import com.arondillqs5328.magic.model.pojo.Coin;
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinViewHolder> {
 
     private List<Coin> coins;
     private List<Integer> favoriteCoins;
-
-    private final SparseBooleanArray selectedCoins = new SparseBooleanArray();
     private MagicDBHelper magicDBHelper;
+    private final SparseBooleanArray selectedCoins = new SparseBooleanArray();
 
-    private final String IMAGE_URL = "https://s2.coinmarketcap.com/static/img/coins/128x128/";
+    private final String url = "https://s2.coinmarketcap.com/static/img/coins/128x128/";
 
     public CoinRecyclerAdapter(List<Coin> coins, MagicDBHelper magicDBHelper) {
         this.coins = coins;
         this.magicDBHelper = magicDBHelper;
     }
 
+    public void setupCoins(List<Coin> coins) {
+        this.coins = coins;
+        notifyDataSetChanged();
+    }
+
+    public void setupFavoriteCoins(List<Integer> favoriteCoins) {
+        this.favoriteCoins = favoriteCoins;
+    }
+
     @NonNull
     @Override
     public CoinViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_coin, viewGroup, false);
-        CoinViewHolder holder = new CoinViewHolder(view);
-        return holder;
+        return new CoinViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CoinViewHolder coinViewHolder, int i) {
-        String url = IMAGE_URL + coins.get(i).getId() + ".png";
-        coinViewHolder.labelTextView.setText(coins.get(i).getName());
+    public void onBindViewHolder(@NonNull final CoinViewHolder holder, int i) {
+        holder.nameTextView.setText(coins.get(i).getName());
+        Picasso.get()
+                .load(url + coins.get(i).getId() + ".png")
+                .into(holder.iconImageView);
 
-        coinViewHolder.favoriteCheckBox.setChecked(selectedCoins.get(i, false));
+        Integer id = coins.get(i).getId();
 
-        if (favoriteCoins.contains(coins.get(i).getId())) {
-            coinViewHolder.favoriteCheckBox.setChecked(true);
+        if (favoriteCoins.contains(id)) {
+            holder.favoriteCheckBox.setChecked(true);
+        } else {
+            holder.favoriteCheckBox.setChecked(selectedCoins.get(i, false));
         }
 
-        coinViewHolder.favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!favoriteCoins.contains(coins.get(coinViewHolder.getAdapterPosition()).getId())) {
-                        Log.i("TAG_L", String.valueOf(new Date().getTime()));
-                        magicDBHelper.insertCoinIntoDB(coins.get(coinViewHolder.getAdapterPosition()));
-
+                    if (!favoriteCoins.contains(coins.get(holder.getAdapterPosition()).getId())) {
+                        magicDBHelper.insertCoinIntoDB(coins.get(holder.getAdapterPosition()));
                     }
                 } else {
-                    if (favoriteCoins.contains(coins.get(coinViewHolder.getAdapterPosition()).getId())) {
-                        magicDBHelper.deleteCoinFromDB(coins.get(coinViewHolder.getAdapterPosition()).getId());
+                    if (favoriteCoins.contains(coins.get(holder.getAdapterPosition()).getId())) {
+                        magicDBHelper.deleteCoinFromDB(coins.get(holder.getAdapterPosition()).getId());
                     }
                 }
-                selectedCoins.put(coinViewHolder.getAdapterPosition(), isChecked);
             }
         });
-
-        Picasso.get()
-                .load(url)
-                .error(R.drawable.ic_terrain_black_24dp)
-                .into(coinViewHolder.logoImageView);
-    }
-
-    public void setCoins(List<Coin> coins) {
-        this.coins = coins;
-    }
-
-    public void setFavoriteCoins(List<Integer> favoriteCoins) {
-        this.favoriteCoins = favoriteCoins;
     }
 
     @Override
@@ -94,16 +87,15 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
 
     class CoinViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView logoImageView;
-        private TextView labelTextView;
+        private ImageView iconImageView;
+        private TextView nameTextView;
         private CheckBox favoriteCheckBox;
 
         CoinViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            logoImageView = itemView.findViewById(R.id.coin_logo);
-            labelTextView = itemView.findViewById(R.id.coin_label);
-            favoriteCheckBox = itemView.findViewById(R.id.checkbox);
+            iconImageView = itemView.findViewById(R.id.coin_icon);
+            nameTextView = itemView.findViewById(R.id.coin_name);
+            favoriteCheckBox = itemView.findViewById(R.id.coin_favorite_checkbox);
         }
     }
 }

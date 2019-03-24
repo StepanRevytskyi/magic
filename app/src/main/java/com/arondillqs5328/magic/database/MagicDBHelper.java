@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.arondillqs5328.magic.CoinApplication;
-import com.arondillqs5328.magic.pojo.Coin;
+import com.arondillqs5328.magic.model.pojo.Coin;
 
 import java.util.Date;
 import java.util.List;

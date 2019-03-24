@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.arondillqs5328.magic.pojo.Coin;
+import com.arondillqs5328.magic.model.pojo.Coin;
 
 import java.util.List;
 

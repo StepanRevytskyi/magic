@@ -1,19 +1,18 @@
 package com.arondillqs5328.magic.presentation.presenter.coin;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.arondillqs5328.magic.callback.coin.CoinCallback;
-import com.arondillqs5328.magic.model.coin.CoinRepository;
-import com.arondillqs5328.magic.pojo.Coin;
+import com.arondillqs5328.magic.model.pojo.Coin;
 import com.arondillqs5328.magic.presentation.view.coin.CoinView;
+import com.arondillqs5328.magic.repository.coin.CoinRepository;
 import com.arondillqs5328.magic.retrofit.RetrofitClient;
-import com.arondillqs5328.magic.retrofit.api.CoinAPI;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 @InjectViewState
 public class CoinPresenter extends MvpPresenter<CoinView> implements CoinCallback {
@@ -21,56 +20,55 @@ public class CoinPresenter extends MvpPresenter<CoinView> implements CoinCallbac
     private boolean isLoading = false;
     private Integer start = 1;
     private Integer limit = 20;
-    private MutableLiveData<List<Coin>> coinLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<Coin>> coinsLiveData = new MutableLiveData<>();
     private CoinRepository repository;
 
     public CoinPresenter() {
-        repository = new CoinRepository(new RetrofitClient().getRetrofitInstance().create(CoinAPI.class));
-        repository.setCallback(this);
+        repository = new CoinRepository(new RetrofitClient().createAPI(), this);
 
         List<Coin> coins = new ArrayList<>();
-        coinLiveData.setValue(coins);
+        coinsLiveData.setValue(coins);
     }
 
-    public LiveData<List<Coin>> getCoinLiveData() {
-        return coinLiveData;
+    public LiveData<List<Coin>> getCoinsLiveData() {
+        return coinsLiveData;
+    }
+
+    public void onLoadMore(int position, int count) {
+        if (position == count - 1) {
+            if (getCoinsLiveData().getValue().size() == 0) {
+                if (!isLoading) {
+                    getViewState().showProgressBar();
+                    repository.loadMore(start, limit);
+                    updateParams();
+                }
+            } else {
+                if (!isLoading) {
+                    repository.loadMore(start, limit);
+                    updateParams();
+                }
+            }
+        }
+    }
+
+    private void updateParams() {
+        start = start + limit;
+        isLoading = true;
+    }
+
+    @Override
+    public void onSuccess(List<Coin> coins) {
+        List<Coin> oldCoins = getCoinsLiveData().getValue();
+        oldCoins.addAll(coins);
+        coinsLiveData.setValue(oldCoins);
+
+        isLoading = false;
+
+        getViewState().hideProgressBar();
     }
 
     @Override
     public void onFailed() {
 
-    }
-
-    @Override
-    public void onSuccess(List<Coin> coins) {
-        List<Coin> oldCoins = getCoinLiveData().getValue();
-        oldCoins.addAll(coins);
-        coinLiveData.setValue(oldCoins);
-
-        isLoading = false;
-        getViewState().hideProgressBar();
-        getViewState().hideFooter();
-    }
-
-    public void onLoadMore(int visiblePosition, int itemCount) {
-        if (visiblePosition == itemCount - 1) {
-            if (getCoinLiveData().getValue().size() == 0) {
-                if (!isLoading) {
-                    getViewState().showProgressBar();
-
-                    repository.loadMore(start, limit);
-                    start = start + limit;
-                    isLoading = true;
-                }
-            } else {
-                if (!isLoading) {
-                    getViewState().showFooter();
-
-                    repository.loadMore(start, limit);
-                    start = start + limit;
-                    isLoading = true;
-                }
-            }
-        }
     }
 }

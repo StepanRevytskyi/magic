@@ -3,7 +3,7 @@ package com.arondillqs5328.magic.database;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-import com.arondillqs5328.magic.pojo.Coin;
+import com.arondillqs5328.magic.model.pojo.Coin;
 
 @Database(entities = {Coin.class}, version = 1, exportSchema = false)
 public abstract class CoinDatabase extends RoomDatabase {
