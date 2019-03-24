@@ -1,21 +1,21 @@
 package com.arondillqs5328.magic.ui.fragment.coin;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arondillqs5328.magic.R;
 import com.arondillqs5328.magic.adapter.CoinRecyclerAdapter;
+import com.arondillqs5328.magic.androidX.MvpAppCompatFragment;
 import com.arondillqs5328.magic.database.MagicDBHelper;
 import com.arondillqs5328.magic.pojo.Coin;
 import com.arondillqs5328.magic.presentation.presenter.coin.CoinPresenter;
@@ -23,13 +23,13 @@ import com.arondillqs5328.magic.presentation.view.coin.CoinView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class CoinFragment extends MvpAppCompatFragment implements CoinView {
 
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.coin_recycler_view) RecyclerView recyclerView;
+
+
+    private ProgressBar progressBar;
+    private  RecyclerView recyclerView;
 
     @InjectPresenter CoinPresenter presenter;
     private LiveData<List<Coin>> coinLiveData;
@@ -48,7 +48,9 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_coin, container, false);
-        ButterKnife.bind(this, view);
+
+        progressBar = view.findViewById(R.id.progress_bar);
+        recyclerView = view.findViewById(R.id.coin_recycler_view);
 
         coinLiveData = presenter.getCoinLiveData();
         favoriteCoinLiveData = magicDBHelper.getCoin();
@@ -67,7 +69,7 @@ public class CoinFragment extends MvpAppCompatFragment implements CoinView {
 
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(new CoinRecyclerAdapter(coinLiveData.getValue(), new MagicDBHelper()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

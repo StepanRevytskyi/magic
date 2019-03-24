@@ -1,7 +1,7 @@
 package com.arondillqs5328.magic.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -20,8 +20,6 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapter.CoinViewHolder> {
 
@@ -51,13 +49,13 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         String url = IMAGE_URL + coins.get(i).getId() + ".png";
         coinViewHolder.labelTextView.setText(coins.get(i).getName());
 
-        coinViewHolder.checkBox.setChecked(selectedCoins.get(i, false));
+        coinViewHolder.favoriteCheckBox.setChecked(selectedCoins.get(i, false));
 
         if (favoriteCoins.contains(coins.get(i).getId())) {
-            coinViewHolder.checkBox.setChecked(true);
+            coinViewHolder.favoriteCheckBox.setChecked(true);
         }
 
-        coinViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        coinViewHolder.favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -94,16 +92,18 @@ public class CoinRecyclerAdapter extends RecyclerView.Adapter<CoinRecyclerAdapte
         return coins.size();
     }
 
-
     class CoinViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.coin_logo) ImageView logoImageView;
-        @BindView(R.id.coin_label) TextView labelTextView;
-        @BindView(R.id.checkbox) CheckBox checkBox;
+        private ImageView logoImageView;
+        private TextView labelTextView;
+        private CheckBox favoriteCheckBox;
 
-        public CoinViewHolder(@NonNull View itemView) {
+        CoinViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+
+            logoImageView = itemView.findViewById(R.id.coin_logo);
+            labelTextView = itemView.findViewById(R.id.coin_label);
+            favoriteCheckBox = itemView.findViewById(R.id.checkbox);
         }
     }
 }

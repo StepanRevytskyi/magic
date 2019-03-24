@@ -1,7 +1,7 @@
 package com.arondillqs5328.magic;
 
 import android.app.Application;
-import android.arch.persistence.room.Room;
+import androidx.room.Room;
 
 import com.arondillqs5328.magic.database.CoinDatabase;
 

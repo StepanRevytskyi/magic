@@ -1,7 +1,7 @@
 package com.arondillqs5328.magic.database;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import com.arondillqs5328.magic.pojo.Coin;
 

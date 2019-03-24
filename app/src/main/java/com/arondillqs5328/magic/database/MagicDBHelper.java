@@ -1,6 +1,6 @@
 package com.arondillqs5328.magic.database;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.util.Log;
 
